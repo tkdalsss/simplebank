@@ -6,8 +6,13 @@ import (
 	"fmt"
 )
 
+type Store interface {
+	Querier
+	TransferTx(Ctx context.Context, arg TransferTxParams) (TransferResult, error)
+}
+
 // Store provides all functions to execute db queries and transactions
-type Store struct {
+type SQLStore struct {
 	// to support transaction query -> composition
 	// Golang에서는 상속보다 기능적으로 확장(extend)가 선호되는 방법
 	// All individual query functions provided by Queries will be available to Store
@@ -16,15 +21,15 @@ type Store struct {
 }
 
 // Create new Store
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // Executes a function within a database transaction
-func (Store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (Store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := Store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -61,7 +66,7 @@ type TransferResult struct {
 var txKey = struct{}{}
 
 // transfer record, add account entries, update accounts' balance
-func (Store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferResult, error) {
+func (Store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferResult, error) {
 	var result TransferResult
 
 	err := Store.execTx(ctx, func(q *Queries) error {

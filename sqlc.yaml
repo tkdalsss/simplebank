@@ -14,7 +14,10 @@ packages:
 
     # to generate Querier interface for the generated package
     # useful for testing higher-level functions
-    emit_interface: false 
+    emit_interface: true 
 
     # default:false, sqlc will try to singularize the table name to use as the model struct name
     emit_exact_table_names: false
+
+    # default: false, return empty instead of nil
+    emit_empty_slices: true
