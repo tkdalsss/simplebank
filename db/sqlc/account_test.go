@@ -14,11 +14,12 @@ import (
 func createRandomAccount(t *testing.T) Account { // use T Object manage he test state
 	// in order to write the test
 	// 1. have to setup the connection and the Queries Object
+	user := createRandomUser(t)
 	arg := CreateAccountParams{
 		// Owner:    "tom",
 		// Balance:  100,
 		// Currency: "USD",
-		Owner:    util.RandomOwner(),
+		Owner:    user.Username,
 		Balance:  util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
