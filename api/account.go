@@ -33,12 +33,12 @@ func (server *Server) createAccount(ctx *gin.Context) {
 
 	account, err := server.store.CreateAccount(ctx, arg)
 	if err != nil {
-
 		// return error Type
 		if pqErr, ok := err.(*pq.Error); ok {
 			// error type swap
 			switch pqErr.Code.Name() {
 			case "foreign_key_violation", "unique_violation":
+				// StatusForbidden
 				ctx.JSON(http.StatusForbidden, errorResponse(err))
 				return
 			}
@@ -98,7 +98,9 @@ func (server *Server) listAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 	arg := db.ListAccountsParams{
+		Owner:  authPayload.Username,
 		Limit:  req.PageSize,
 		Offset: (req.PageID - 1) * req.PageSize,
 	}
