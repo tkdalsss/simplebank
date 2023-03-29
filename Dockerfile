@@ -11,6 +11,7 @@ WORKDIR /app
 # --from -> argument to tell docker where to copy the file from
 # /app/main . -> dot represents the WORKDIR that we set above /app
 COPY --from=builder /app/main .
+COPY app.env .
 
 EXPOSE 8080
 # excecutable
