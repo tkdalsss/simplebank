@@ -22,6 +22,7 @@ jobs:
     #     role-to-assume: ${{secrets.AWS_ACCESS_TOKEN}}
     #     aws-region: ap-northeast-2 # seoul, Republic of Korea
     
+    # find other solution
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
