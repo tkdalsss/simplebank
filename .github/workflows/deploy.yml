@@ -1,4 +1,4 @@
-name: Deploy to production
+name: AWS example workflow
 
 on:
   push:
@@ -8,18 +8,11 @@ jobs:
   build:
     name: Build image
     runs-on: ubuntu-latest
-    # Service containers to run with 'container-job'
 
+    # Service containers to run with 'container-job'
     steps:
     - name: Check out code
       uses: action/checkout@v2
-
-    # Amazon ECR "login" Action for Github Actions
-    # - name: Configure AWS credentials
-    #   uses: aws-actions/configure-aws-credentials@v2 # More information on this action can be found below in the 'AWS Credentials' section
-    #   with:
-    #     role-to-assume: ${{secrets.AWS_ACCESS_TOKEN}}
-    #     aws-region: ap-northeast-2 # seoul, Republic of Korea
     
     # find other solution
     - name: Configure AWS Credentials
@@ -41,25 +34,3 @@ jobs:
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-    #####################################################
-    
-    # - name: Set up Go 1.x
-    #   uses: actions/setup-go@v2
-    #   with:
-    #     go-version: ^1.19
-    #   id: go
-    
-    # - name: Check out code into the Go module directory
-    #   uses: actions/checkout@v2
-
-    # - name: Install golang-migrate
-    #   run: |
-    #     curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
-    #     sudo mv migrate /usr/bin/migrate
-    #     which migrate
-
-    # - name: Run migrations
-    #   run: make migrateup
-
-    # - name: Test
-    #   run: make test
